@@ -23,13 +23,16 @@
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html { width: 100%; max-width: 100%; scroll-behavior: smooth; overflow-x: hidden; }
     body {
+      width: 100%;
+      max-width: 100%;
       margin: 0;
       color: var(--ink);
       background: #f4f7fb;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       line-height: 1.55;
+      overflow-x: hidden;
     }
 
     button, input { font: inherit; }
@@ -127,8 +130,10 @@
     .box { min-height: 72px; display: grid; place-items: center; border-radius: 10px 10px 3px 3px; color: var(--navy); background: linear-gradient(145deg, #ffd66f, var(--amber)); font-weight: 900; box-shadow: inset -8px -8px 0 rgba(174,103,0,.12); }
     .visual-caption { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; color: #e9f4ff; font-weight: 750; }
 
-    main { overflow: hidden; }
+    main { width: 100%; max-width: 100%; overflow: hidden; }
     section { padding: 76px clamp(20px, 7vw, 105px); }
+    section, .methods, .method-card, .lab-grid, .panel, #labOutput { min-width: 0; max-width: 100%; }
+    p, li, label, h1, h2, h3, h4, strong, span { overflow-wrap: anywhere; }
     section:nth-child(even) { background: var(--paper); }
     .section-head { max-width: 820px; margin-bottom: 34px; }
     .kicker { color: var(--blue); font-weight: 900; letter-spacing: .09em; text-transform: uppercase; font-size: .78rem; }
@@ -159,7 +164,7 @@
     .impact-strip div { padding: 20px; text-align: center; background: var(--sky); }
     .impact-strip strong { display: block; color: var(--navy); font-size: 1.18rem; }
 
-    .methods { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .methods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
     .method-card { position: relative; overflow: hidden; padding: 27px; }
     .method-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 7px; background: var(--amber); }
     .method-tag { display: inline-block; margin-bottom: 11px; padding: 5px 9px; border-radius: 8px; color: #774d00; background: var(--amber-soft); font-size: .78rem; font-weight: 900; }
@@ -175,7 +180,14 @@
       font-size: 1.05rem;
       font-weight: 750;
       text-align: center;
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
+    .formula-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 28px; }
+    .formula-card { padding: 20px; border: 1px solid #cddbeb; border-radius: 16px; background: linear-gradient(145deg, #fff, #f2f7fd); }
+    .formula-card h3 { margin-bottom: 12px; font-size: 1rem; }
+    .formula-card .formula { margin: 0; }
+    .substitution { margin: 10px 0 0; color: var(--muted); font-size: .92rem; text-align: center; }
     .note { padding: 14px 16px; border-left: 5px solid var(--amber); border-radius: 0 12px 12px 0; background: var(--amber-soft); color: #604511; }
 
     .case-banner {
@@ -204,7 +216,7 @@
     .calc-line strong { text-align: right; }
     .result-highlight { margin-top: 12px; padding: 14px; border-radius: 12px; background: var(--sky); }
 
-    .lab-grid { display: grid; grid-template-columns: .75fr 1.25fr; gap: 24px; align-items: start; }
+    .lab-grid { display: grid; grid-template-columns: minmax(260px, .65fr) minmax(0, 1.35fr); gap: 24px; align-items: start; }
     .panel { padding: 26px; }
     .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     label { color: var(--navy); font-size: .88rem; font-weight: 800; }
@@ -226,6 +238,18 @@
     .metric strong { display: block; margin-top: 4px; font-size: 1.3rem; }
     .method-result { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
     .method-result:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+    .lot-overview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 16px 0 22px; }
+    .lot-card { padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: #f8fbff; }
+    .lot-card.old { border-top: 5px solid #466d9d; }
+    .lot-card.recent { border-top: 5px solid var(--amber); }
+    .lot-card h4 { margin: 0 0 9px; color: var(--navy); }
+    .lot-card p { margin: 5px 0; }
+    .lot-breakdown { display: grid; gap: 10px; margin: 14px 0; }
+    .lot-row { padding: 14px; border: 1px solid var(--line); border-radius: 13px; background: #fbfdff; }
+    .lot-row h4 { margin: 0 0 10px; color: var(--navy); }
+    .lot-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 8px; }
+    .lot-metrics span { padding: 9px; border-radius: 9px; color: var(--ink); background: #edf4fc; font-size: .84rem; }
+    .lot-metrics b { display: block; margin-top: 2px; color: var(--navy); font-size: .98rem; }
 
     .specific-grid, .perpetual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     .mini-table, .transaction-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
@@ -273,7 +297,7 @@
     .references a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: 3px; }
     footer { padding: 30px clamp(20px, 7vw, 105px); color: #cadbf0; background: #0b2349; text-align: center; }
 
-    @media (max-width: 980px) {
+    @media (max-width: 1100px) {
       .hero, .case-banner, .lab-grid, .specific-grid, .perpetual-grid { grid-template-columns: 1fr; }
       .hero { min-height: auto; }
       .hero-visual { min-height: 300px; }
@@ -286,7 +310,7 @@
       .nav { display: none; }
       section { padding-top: 56px; padding-bottom: 56px; }
       .hero { padding-top: 52px; }
-      .methods, .summary-grid, .inputs, .lab-results { grid-template-columns: 1fr; }
+      .methods, .summary-grid, .inputs, .lab-results, .formula-grid, .lot-overview { grid-template-columns: 1fr; }
       .full { grid-column: auto; }
       .impact-strip { grid-template-columns: 1fr; }
       .comparison { grid-template-columns: 1fr; }
@@ -352,6 +376,24 @@
         <div><strong>Inventario final</strong>Valor de las unidades almacenadas.</div>
         <div><strong>Utilidad bruta</strong>Ventas menos costo de ventas.</div>
       </div>
+      <div class="formula-grid" aria-label="Fórmulas generales de valuación de inventarios">
+        <article class="formula-card">
+          <h3>Costo de mercancía disponible</h3>
+          <div class="formula">CMD = Inventario inicial + Compras</div>
+        </article>
+        <article class="formula-card">
+          <h3>Costo de ventas</h3>
+          <div class="formula">CV = CMD − Inventario final</div>
+        </article>
+        <article class="formula-card">
+          <h3>Inventario final</h3>
+          <div class="formula">IF = CMD − Costo de ventas</div>
+        </article>
+        <article class="formula-card">
+          <h3>Utilidad bruta</h3>
+          <div class="formula">UB = Ventas − Costo de ventas</div>
+        </article>
+      </div>
     </section>
 
     <section id="metodos">
@@ -371,12 +413,14 @@
           <span class="method-tag">3.2</span>
           <h3>PEPS</h3>
           <p><strong>Primeras entradas, primeras salidas.</strong> Las unidades más antiguas se consideran vendidas primero.</p>
+          <div class="formula">CV<sub>PEPS</sub> = Σ (unidades vendidas de los lotes más antiguos × costo del lote)</div>
           <ul><li>El costo de ventas utiliza primero los costos antiguos.</li><li>El inventario final conserva los costos recientes.</li></ul>
         </article>
         <article class="method-card">
           <span class="method-tag">3.3</span>
           <h3>UEPS</h3>
           <p><strong>Últimas entradas, primeras salidas.</strong> Las compras más recientes se consideran vendidas primero.</p>
+          <div class="formula">CV<sub>UEPS</sub> = Σ (unidades vendidas de los lotes más recientes × costo del lote)</div>
           <ul><li>El costo de ventas utiliza primero los costos recientes.</li><li>El inventario final conserva los costos antiguos.</li></ul>
           <p class="note">Se estudia con fines comparativos; su aceptación depende de la normativa contable aplicable.</p>
         </article>
@@ -385,6 +429,8 @@
           <h3>Promedio ponderado</h3>
           <p>Reúne el costo de todas las unidades disponibles y calcula un costo promedio por unidad.</p>
           <div class="formula">Costo promedio = Costo total disponible ÷ Unidades disponibles</div>
+          <div class="formula">CV = Unidades vendidas × Costo promedio</div>
+          <div class="formula">IF = Unidades finales × Costo promedio</div>
           <p>Ese costo promedio se asigna tanto a las salidas como al inventario final.</p>
         </article>
       </div>
@@ -400,24 +446,25 @@
         <div><h3>Datos del caso</h3><p>Antes de calcular, verifica que el costo total disponible sea igual al costo de ventas más el inventario final.</p></div>
         <div class="data-chips"><span class="chip">100 u × $50</span><span class="chip">80 u × $55</span><span class="chip">Venta: 120 u</span></div>
       </div>
+      <div class="formula" style="margin-bottom:22px">Costo disponible = (100 × $50) + (80 × $55) = $5,000 + $4,400 = <strong>$9,400</strong></div>
       <div class="comparison">
         <article class="result-card">
           <h3>PEPS <span class="method-icon">01</span></h3>
           <div class="calc-line"><span>100 antiguas × $50</span><strong>$5,000</strong></div>
           <div class="calc-line"><span>20 recientes × $55</span><strong>$1,100</strong></div>
-          <div class="result-highlight"><strong>Costo de ventas: $6,100</strong><br>Inventario final: 60 × $55 = <strong>$3,300</strong></div>
+          <div class="result-highlight"><strong>Costo de ventas:</strong> (100 × $50) + (20 × $55) = <strong>$6,100</strong><br><strong>Inventario final:</strong> $9,400 − $6,100 = 60 × $55 = <strong>$3,300</strong></div>
         </article>
         <article class="result-card">
           <h3>UEPS <span class="method-icon">02</span></h3>
           <div class="calc-line"><span>80 recientes × $55</span><strong>$4,400</strong></div>
           <div class="calc-line"><span>40 antiguas × $50</span><strong>$2,000</strong></div>
-          <div class="result-highlight"><strong>Costo de ventas: $6,400</strong><br>Inventario final: 60 × $50 = <strong>$3,000</strong></div>
+          <div class="result-highlight"><strong>Costo de ventas:</strong> (80 × $55) + (40 × $50) = <strong>$6,400</strong><br><strong>Inventario final:</strong> $9,400 − $6,400 = 60 × $50 = <strong>$3,000</strong></div>
         </article>
         <article class="result-card">
           <h3>Promedio <span class="method-icon">03</span></h3>
           <div class="calc-line"><span>Costo disponible</span><strong>$9,400</strong></div>
           <div class="calc-line"><span>Promedio: $9,400 ÷ 180</span><strong>$52.22</strong></div>
-          <div class="result-highlight"><strong>Costo de ventas: $6,266.67</strong><br>Inventario final: <strong>$3,133.33</strong></div>
+          <div class="result-highlight"><strong>Costo de ventas:</strong> 120 × $52.2222 = <strong>$6,266.67</strong><br><strong>Inventario final:</strong> $9,400 − $6,266.67 = 60 × $52.2222 = <strong>$3,133.33</strong></div>
         </article>
       </div>
       <p class="note" style="margin-top:22px"><strong>Comprobación:</strong> en los tres métodos, costo de ventas + inventario final = $9,400. Lo que cambia es cómo se distribuye ese costo.</p>
@@ -433,10 +480,10 @@
         <form class="panel" id="inventoryForm">
           <h3>Datos de entrada</h3>
           <div class="inputs">
-            <label>Unidades del lote inicial<input id="q1" type="number" min="0" step="1" value="100"></label>
-            <label>Costo unitario inicial ($)<input id="c1" type="number" min="0" step="0.01" value="50"></label>
-            <label>Unidades de la compra<input id="q2" type="number" min="0" step="1" value="80"></label>
-            <label>Costo unitario de compra ($)<input id="c2" type="number" min="0" step="0.01" value="55"></label>
+            <label>Unidades antiguas (inventario inicial)<input id="q1" type="number" min="0" step="1" value="100"></label>
+            <label>Costo unitario de las unidades antiguas ($)<input id="c1" type="number" min="0" step="0.01" value="50"></label>
+            <label>Unidades recientes (última compra)<input id="q2" type="number" min="0" step="1" value="80"></label>
+            <label>Costo unitario de las unidades recientes ($)<input id="c2" type="number" min="0" step="0.01" value="55"></label>
             <label class="full">Unidades vendidas<input id="sold" type="number" min="0" step="1" value="120"></label>
           </div>
           <div class="error" id="labError" role="alert"></div>
@@ -597,15 +644,37 @@
     function fifo(q1, c1, q2, c2, sold) {
       const from1 = Math.min(sold, q1);
       const from2 = Math.max(0, sold - from1);
+      const remaining1 = q1 - from1;
+      const remaining2 = q2 - from2;
       const cogs = from1 * c1 + from2 * c2;
-      return { cogs, ending: q1 * c1 + q2 * c2 - cogs, detail: `${from1} u × ${money(c1)} + ${from2} u × ${money(c2)}` };
+      return {
+        cogs,
+        ending: q1 * c1 + q2 * c2 - cogs,
+        soldOld: from1,
+        soldRecent: from2,
+        remainingOld: remaining1,
+        remainingRecent: remaining2,
+        detail: `(${from1} u × ${money(c1)}) + (${from2} u × ${money(c2)})`,
+        endingDetail: `(${remaining1} u × ${money(c1)}) + (${remaining2} u × ${money(c2)})`
+      };
     }
 
     function lifo(q1, c1, q2, c2, sold) {
       const from2 = Math.min(sold, q2);
       const from1 = Math.max(0, sold - from2);
+      const remaining1 = q1 - from1;
+      const remaining2 = q2 - from2;
       const cogs = from2 * c2 + from1 * c1;
-      return { cogs, ending: q1 * c1 + q2 * c2 - cogs, detail: `${from2} u × ${money(c2)} + ${from1} u × ${money(c1)}` };
+      return {
+        cogs,
+        ending: q1 * c1 + q2 * c2 - cogs,
+        soldOld: from1,
+        soldRecent: from2,
+        remainingOld: remaining1,
+        remainingRecent: remaining2,
+        detail: `(${from2} u × ${money(c2)}) + (${from1} u × ${money(c1)})`,
+        endingDetail: `(${remaining1} u × ${money(c1)}) + (${remaining2} u × ${money(c2)})`
+      };
     }
 
     function average(q1, c1, q2, c2, sold) {
@@ -613,7 +682,15 @@
       const totalCost = q1 * c1 + q2 * c2;
       const unit = totalCost / totalUnits;
       const cogs = sold * unit;
-      return { cogs, ending: totalCost - cogs, detail: `${money(totalCost)} ÷ ${totalUnits} u = ${money(unit)}` };
+      return {
+        cogs,
+        ending: totalCost - cogs,
+        combined: true,
+        averageUnitCost: unit,
+        detail: `${sold} u × (${money(totalCost)} ÷ ${totalUnits} u) = ${sold} u × ${money(unit)}`,
+        endingDetail: `${totalUnits - sold} u × ${money(unit)}`,
+        averageDetail: `${money(totalCost)} ÷ ${totalUnits} u = ${money(unit)}`
+      };
     }
 
     function renderLab() {
@@ -648,14 +725,78 @@
         ['UEPS', lifo(q1, c1, q2, c2, sold)],
         ['Promedio ponderado', average(q1, c1, q2, c2, sold)]
       ];
-      output.innerHTML = results.map(([name, r]) => `
+      const totalUnits = q1 + q2;
+      const endingUnits = totalUnits - sold;
+      const totalCost = q1 * c1 + q2 * c2;
+      output.innerHTML = `
+        <div class="lot-overview">
+          <div class="lot-card old">
+            <h4>Lote antiguo · inventario inicial</h4>
+            <p><strong>Unidades:</strong> ${q1} u</p>
+            <p><strong>Costo unitario:</strong> ${money(c1)}</p>
+            <p><strong>Valor del lote:</strong> ${q1} × ${money(c1)} = ${money(q1 * c1)}</p>
+          </div>
+          <div class="lot-card recent">
+            <h4>Lote reciente · última compra</h4>
+            <p><strong>Unidades:</strong> ${q2} u</p>
+            <p><strong>Costo unitario:</strong> ${money(c2)}</p>
+            <p><strong>Valor del lote:</strong> ${q2} × ${money(c2)} = ${money(q2 * c2)}</p>
+          </div>
+        </div>
+        <div class="formula" style="margin-top:0">
+          Unidades disponibles = ${q1} antiguas + ${q2} recientes = <strong>${totalUnits} u</strong><br>
+          Costo disponible = (${q1} × ${money(c1)}) + (${q2} × ${money(c2)}) = <strong>${money(totalCost)}</strong><br>
+          Unidades vendidas = <strong>${sold} u</strong><br>
+          Unidades finales = ${totalUnits} disponibles − ${sold} vendidas = <strong>${endingUnits} u</strong>
+        </div>` + results.map(([name, r]) => `
         <div class="method-result">
           <h3>${name}</h3>
-          <p><strong>Asignación:</strong> ${r.detail}</p>
+          ${r.combined ? `
+            <div class="lot-breakdown">
+              <div class="lot-row">
+                <h4>Unidades combinadas al costo promedio</h4>
+                <div class="lot-metrics">
+                  <span>Disponibles<b>${totalUnits} u</b></span>
+                  <span>Vendidas<b>${sold} u</b></span>
+                  <span>Restantes<b>${endingUnits} u</b></span>
+                  <span>Costo promedio/u<b>${money(r.averageUnitCost)}</b></span>
+                  <span>Costo de ventas<b>${money(r.cogs)}</b></span>
+                  <span>Inventario final<b>${money(r.ending)}</b></span>
+                </div>
+              </div>
+            </div>` : `
+            <div class="lot-breakdown">
+              <div class="lot-row">
+                <h4>Lote antiguo</h4>
+                <div class="lot-metrics">
+                  <span>Disponibles<b>${q1} u</b></span>
+                  <span>Vendidas<b>${r.soldOld} u</b></span>
+                  <span>Restantes<b>${r.remainingOld} u</b></span>
+                  <span>Costo unitario<b>${money(c1)}</b></span>
+                  <span>Costo de venta del lote<b>${r.soldOld} × ${money(c1)} = ${money(r.soldOld * c1)}</b></span>
+                  <span>Valor final del lote<b>${r.remainingOld} × ${money(c1)} = ${money(r.remainingOld * c1)}</b></span>
+                </div>
+              </div>
+              <div class="lot-row">
+                <h4>Lote reciente</h4>
+                <div class="lot-metrics">
+                  <span>Disponibles<b>${q2} u</b></span>
+                  <span>Vendidas<b>${r.soldRecent} u</b></span>
+                  <span>Restantes<b>${r.remainingRecent} u</b></span>
+                  <span>Costo unitario<b>${money(c2)}</b></span>
+                  <span>Costo de venta del lote<b>${r.soldRecent} × ${money(c2)} = ${money(r.soldRecent * c2)}</b></span>
+                  <span>Valor final del lote<b>${r.remainingRecent} × ${money(c2)} = ${money(r.remainingRecent * c2)}</b></span>
+                </div>
+              </div>
+            </div>`}
+          ${r.averageDetail ? `<p><strong>Costo promedio:</strong> ${r.averageDetail}</p>` : ''}
+          <p><strong>Costo de ventas:</strong> ${r.detail} = <strong>${money(r.cogs)}</strong></p>
+          <p><strong>Inventario final por unidades:</strong> ${r.endingDetail} = <strong>${money(r.ending)}</strong></p>
+          <p><strong>Inventario final por diferencia:</strong> ${money(totalCost)} − ${money(r.cogs)} = <strong>${money(r.ending)}</strong></p>
           <div class="lab-results">
             <div class="metric"><small>Costo de ventas</small><strong>${money(r.cogs)}</strong></div>
             <div class="metric"><small>Inventario final</small><strong>${money(r.ending)}</strong></div>
-            <div class="metric"><small>Comprobación</small><strong>${money(r.cogs + r.ending)}</strong></div>
+            <div class="metric"><small>CV + IF = costo disponible</small><strong>${money(r.cogs)} + ${money(r.ending)} = ${money(r.cogs + r.ending)}</strong></div>
           </div>
         </div>`).join('');
     }
