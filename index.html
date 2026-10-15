@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Recurso interactivo de la Unidad 3: valuación de inventarios, PEPS, UEPS, promedio ponderado, identificación específica e inventario perpetuo.">
+  <title>Unidad 3 · Valuación de inventarios</title>
+  <style>
+    :root {
+      --navy: #102f5f;
+      --blue: #1f63a8;
+      --sky: #e8f2ff;
+      --ink: #132238;
+      --muted: #5d6b7c;
+      --amber: #f7b731;
+      --amber-soft: #fff4d6;
+      --green: #168a62;
+      --red: #c44545;
+      --paper: #ffffff;
+      --line: #d8e1ec;
+      --shadow: 0 14px 38px rgba(16, 47, 95, .12);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #f4f7fb;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 12px clamp(18px, 4vw, 64px);
+      color: white;
+      background: rgba(16, 47, 95, .96);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 5px 18px rgba(0, 0, 0, .13);
+    }
+    .brand { font-weight: 900; letter-spacing: .02em; }
+    .nav { display: flex; flex-wrap: wrap; gap: 8px; }
+    .nav a {
+      padding: 7px 11px;
+      border-radius: 999px;
+      color: #eaf2ff;
+      text-decoration: none;
+      font-size: .88rem;
+      font-weight: 700;
+    }
+    .nav a:hover, .nav a:focus-visible { background: rgba(255,255,255,.14); }
+
+    .hero {
+      min-height: 540px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(330px, .85fr);
+      align-items: center;
+      gap: clamp(28px, 6vw, 90px);
+      padding: 72px clamp(22px, 7vw, 105px);
+      color: white;
+      background:
+        radial-gradient(circle at 87% 15%, rgba(247,183,49,.35), transparent 24%),
+        linear-gradient(130deg, #0b2349 0%, #154b85 65%, #2879bd 100%);
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px;
+      color: #e8f3ff;
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      margin: 18px 0 16px;
+      font-size: clamp(2.35rem, 5.5vw, 5.2rem);
+      line-height: .98;
+      letter-spacing: -.055em;
+    }
+    .hero p { max-width: 720px; margin: 0; color: #dbeaff; font-size: clamp(1rem, 1.8vw, 1.25rem); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 17px;
+      font-weight: 850;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { color: #17223a; background: var(--amber); box-shadow: 0 10px 20px rgba(247,183,49,.22); }
+    .btn-secondary { color: white; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.3); }
+    .btn-blue { color: white; background: var(--blue); }
+    .btn-ghost { color: var(--navy); background: #edf4fc; border: 1px solid #c9dbef; }
+
+    .hero-visual {
+      position: relative;
+      min-height: 360px;
+      display: grid;
+      place-items: center;
+    }
+    .warehouse {
+      width: min(100%, 470px);
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 28px;
+      background: rgba(255,255,255,.1);
+      box-shadow: 0 28px 60px rgba(0,0,0,.22);
+      backdrop-filter: blur(10px);
+    }
+    .shelf { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 14px 0; padding-bottom: 12px; border-bottom: 5px solid rgba(255,255,255,.35); }
+    .box { min-height: 72px; display: grid; place-items: center; border-radius: 10px 10px 3px 3px; color: var(--navy); background: linear-gradient(145deg, #ffd66f, var(--amber)); font-weight: 900; box-shadow: inset -8px -8px 0 rgba(174,103,0,.12); }
+    .visual-caption { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; color: #e9f4ff; font-weight: 750; }
+
+    main { overflow: hidden; }
+    section { padding: 76px clamp(20px, 7vw, 105px); }
+    section:nth-child(even) { background: var(--paper); }
+    .section-head { max-width: 820px; margin-bottom: 34px; }
+    .kicker { color: var(--blue); font-weight: 900; letter-spacing: .09em; text-transform: uppercase; font-size: .78rem; }
+    h2 { margin: 7px 0 12px; color: var(--navy); font-size: clamp(1.8rem, 3.5vw, 3rem); line-height: 1.1; letter-spacing: -.035em; }
+    h3 { margin: 0 0 9px; color: var(--navy); line-height: 1.2; }
+    .lead { color: var(--muted); font-size: 1.05rem; }
+
+    .goals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .goal, .method-card, .panel, .exercise-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: var(--shadow);
+    }
+    .goal { padding: 24px; }
+    .goal-number { width: 42px; height: 42px; display: grid; place-items: center; margin-bottom: 15px; border-radius: 12px; color: white; background: var(--navy); font-weight: 900; }
+
+    .impact-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 28px;
+      overflow: hidden;
+      border-radius: 16px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+    .impact-strip div { padding: 20px; text-align: center; background: var(--sky); }
+    .impact-strip strong { display: block; color: var(--navy); font-size: 1.18rem; }
+
+    .methods { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .method-card { position: relative; overflow: hidden; padding: 27px; }
+    .method-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 7px; background: var(--amber); }
+    .method-tag { display: inline-block; margin-bottom: 11px; padding: 5px 9px; border-radius: 8px; color: #774d00; background: var(--amber-soft); font-size: .78rem; font-weight: 900; }
+    .method-card ul { margin-bottom: 0; padding-left: 20px; }
+    .formula {
+      margin: 16px 0;
+      padding: 14px;
+      overflow-x: auto;
+      border-radius: 12px;
+      color: var(--navy);
+      background: #edf5ff;
+      font-family: "Cambria Math", Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 750;
+      text-align: center;
+    }
+    .note { padding: 14px 16px; border-left: 5px solid var(--amber); border-radius: 0 12px 12px 0; background: var(--amber-soft); color: #604511; }
+
+    .case-banner {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 28px;
+      padding: 27px;
+      border-radius: var(--radius);
+      color: white;
+      background: linear-gradient(120deg, var(--navy), #225f98);
+      box-shadow: var(--shadow);
+    }
+    .case-banner h3 { color: white; font-size: 1.45rem; }
+    .case-banner p { margin-bottom: 0; color: #dfeeff; }
+    .data-chips { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+    .chip { padding: 9px 12px; border-radius: 10px; color: var(--navy); background: white; font-weight: 850; }
+
+    .comparison { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .result-card { padding: 23px; border-radius: 18px; border: 1px solid var(--line); background: white; box-shadow: 0 10px 26px rgba(16,47,95,.08); }
+    .result-card h3 { display: flex; align-items: center; justify-content: space-between; }
+    .result-card .method-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: white; background: var(--blue); font-size: .8rem; }
+    .calc-line { display: flex; justify-content: space-between; gap: 15px; padding: 9px 0; border-bottom: 1px dashed var(--line); }
+    .calc-line:last-child { border: 0; }
+    .calc-line strong { text-align: right; }
+    .result-highlight { margin-top: 12px; padding: 14px; border-radius: 12px; background: var(--sky); }
+
+    .lab-grid { display: grid; grid-template-columns: .75fr 1.25fr; gap: 24px; align-items: start; }
+    .panel { padding: 26px; }
+    .inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    label { color: var(--navy); font-size: .88rem; font-weight: 800; }
+    input[type="number"] {
+      width: 100%;
+      margin-top: 6px;
+      padding: 10px 11px;
+      border: 1px solid #b9c9da;
+      border-radius: 10px;
+      color: var(--ink);
+      background: white;
+    }
+    input:focus { outline: 3px solid rgba(31,99,168,.17); border-color: var(--blue); }
+    .full { grid-column: 1 / -1; }
+    .error { min-height: 24px; margin: 10px 0; color: var(--red); font-weight: 750; }
+    .lab-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .metric { padding: 16px; border-radius: 14px; color: var(--navy); background: #f3f7fc; border: 1px solid var(--line); }
+    .metric small { display: block; color: var(--muted); }
+    .metric strong { display: block; margin-top: 4px; font-size: 1.3rem; }
+    .method-result { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+    .method-result:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+
+    .specific-grid, .perpetual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .mini-table, .transaction-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    .mini-table th, .mini-table td, .transaction-table th, .transaction-table td { padding: 11px 10px; border-bottom: 1px solid var(--line); text-align: right; }
+    .mini-table th:first-child, .mini-table td:first-child, .transaction-table th:first-child, .transaction-table td:first-child { text-align: left; }
+    th { color: var(--navy); background: #eff5fc; }
+    .flow { display: grid; gap: 10px; margin-top: 18px; }
+    .flow-step { display: grid; grid-template-columns: 42px 1fr; gap: 12px; align-items: center; padding: 13px; border: 1px solid var(--line); border-radius: 13px; background: #f8fbff; }
+    .flow-step span { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 11px; color: white; background: var(--blue); font-weight: 900; }
+
+    .quiz-wrap { max-width: 940px; margin: 0 auto; }
+    .progress { height: 10px; overflow: hidden; margin: 18px 0 30px; border-radius: 999px; background: #dce6f1; }
+    .progress > div { width: 0; height: 100%; background: linear-gradient(90deg, var(--amber), #ff7f50); transition: width .3s ease; }
+    .exercise-card { margin-bottom: 18px; padding: 23px; box-shadow: 0 7px 18px rgba(16,47,95,.07); }
+    .exercise-card legend { padding: 0 6px; color: var(--navy); font-weight: 900; }
+    .option { display: flex; gap: 10px; align-items: flex-start; margin: 9px 0; padding: 10px; border: 1px solid transparent; border-radius: 10px; }
+    .option:hover { background: #f3f7fc; }
+    .option input { margin-top: 4px; }
+    .feedback { display: none; margin-top: 12px; padding: 11px 13px; border-radius: 10px; font-weight: 700; }
+    .correct .feedback { display: block; color: #075c3e; background: #e1f7ef; }
+    .incorrect .feedback { display: block; color: #8a2929; background: #fde8e8; }
+    .correct { border-color: #6fc9aa; }
+    .incorrect { border-color: #e5a1a1; }
+    .score-box { display: none; margin-top: 24px; padding: 28px; border-radius: var(--radius); color: white; background: linear-gradient(125deg, var(--navy), var(--blue)); text-align: center; box-shadow: var(--shadow); }
+    .score-box strong { display: block; font-size: 3.2rem; line-height: 1; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .summary-item { padding: 22px; border-top: 6px solid var(--amber); border-radius: 16px; background: white; box-shadow: var(--shadow); }
+    .references {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: var(--shadow);
+    }
+    .references p {
+      margin: 0 0 17px;
+      padding-left: 2.2rem;
+      text-indent: -2.2rem;
+      overflow-wrap: anywhere;
+    }
+    .references p:last-child { margin-bottom: 0; }
+    .references a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    footer { padding: 30px clamp(20px, 7vw, 105px); color: #cadbf0; background: #0b2349; text-align: center; }
+
+    @media (max-width: 980px) {
+      .hero, .case-banner, .lab-grid, .specific-grid, .perpetual-grid { grid-template-columns: 1fr; }
+      .hero { min-height: auto; }
+      .hero-visual { min-height: 300px; }
+      .data-chips { justify-content: flex-start; }
+      .comparison, .goals { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .nav { display: none; }
+      section { padding-top: 56px; padding-bottom: 56px; }
+      .hero { padding-top: 52px; }
+      .methods, .summary-grid, .inputs, .lab-results { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .impact-strip { grid-template-columns: 1fr; }
+      .comparison { grid-template-columns: 1fr; }
+      .transaction-table { font-size: .82rem; }
+    }
+    @media print {
+      .topbar, .hero-actions, #laboratorio, #practica, footer { display: none !important; }
+      body { background: white; }
+      section { padding: 28px; break-inside: avoid; }
+      .hero { min-height: auto; padding: 35px; color: black; background: white; }
+      .hero p { color: #333; }
+      .hero-visual { display: none; }
+      .goal, .method-card, .panel, .exercise-card, .result-card { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">COSTOS Y PRESUPUESTOS · U3</div>
+    <nav class="nav" aria-label="Navegación principal">
+      <a href="#proposito">Propósito</a>
+      <a href="#metodos">Métodos</a>
+      <a href="#caso">Caso</a>
+      <a href="#laboratorio">Calculadora</a>
+      <a href="#perpetuo">Perpetuo</a>
+      <a href="#practica">Ejercicios</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div>
+        <span class="eyebrow">Unidad 3 · Recurso interactivo</span>
+        <h1>Valuación de inventarios</h1>
+        <p>Comprende cómo una empresa asigna costos a las unidades vendidas y a las existencias finales mediante identificación específica, PEPS, UEPS y promedio ponderado.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#metodos">Comenzar recorrido</a>
+          <a class="btn btn-secondary" href="#laboratorio">Ir a la calculadora</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-label="Representación de un almacén con lotes de inventario">
+        <div class="warehouse">
+          <div class="shelf"><div class="box">Lote A</div><div class="box">Lote A</div><div class="box">Lote B</div></div>
+          <div class="shelf"><div class="box">Lote B</div><div class="box">Lote C</div><div class="box">Lote C</div></div>
+          <div class="visual-caption"><span>Entradas</span><span>Costos distintos</span><span>Salidas</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="proposito">
+      <div class="section-head">
+        <span class="kicker">¿Por qué importa?</span>
+        <h2>El método modifica los resultados contables</h2>
+        <p class="lead">Valuar inventarios significa asignar un costo monetario a las unidades vendidas y a las que permanecen almacenadas. No cambia la cantidad física; cambia la forma de distribuir su costo.</p>
+      </div>
+      <div class="goals">
+        <article class="goal"><div class="goal-number">1</div><h3>Reconocer</h3><p>Identificar las características y el uso de cada método de valuación.</p></article>
+        <article class="goal"><div class="goal-number">2</div><h3>Calcular</h3><p>Obtener el costo de ventas y el valor del inventario final.</p></article>
+        <article class="goal"><div class="goal-number">3</div><h3>Interpretar</h3><p>Explicar por qué los resultados cambian cuando los costos de compra varían.</p></article>
+      </div>
+      <div class="impact-strip" aria-label="Efectos de la valuación">
+        <div><strong>Costo de ventas</strong>Valor de las unidades que salieron.</div>
+        <div><strong>Inventario final</strong>Valor de las unidades almacenadas.</div>
+        <div><strong>Utilidad bruta</strong>Ventas menos costo de ventas.</div>
+      </div>
+    </section>
+
+    <section id="metodos">
+      <div class="section-head">
+        <span class="kicker">Teoría esencial</span>
+        <h2>Cuatro formas de asignar el costo</h2>
+        <p class="lead">Las unidades pueden ser físicamente iguales, pero haber sido adquiridas a precios diferentes. Cada método establece qué costo se asigna a las salidas.</p>
+      </div>
+      <div class="methods">
+        <article class="method-card">
+          <span class="method-tag">3.1</span>
+          <h3>Identificación específica</h3>
+          <p>Cada artículo conserva su costo individual. La empresa sabe exactamente cuál unidad se vendió.</p>
+          <ul><li>Útil en automóviles, maquinaria, joyería o proyectos únicos.</li><li>Requiere rastreo individual mediante serie, etiqueta o expediente.</li></ul>
+        </article>
+        <article class="method-card">
+          <span class="method-tag">3.2</span>
+          <h3>PEPS</h3>
+          <p><strong>Primeras entradas, primeras salidas.</strong> Las unidades más antiguas se consideran vendidas primero.</p>
+          <ul><li>El costo de ventas utiliza primero los costos antiguos.</li><li>El inventario final conserva los costos recientes.</li></ul>
+        </article>
+        <article class="method-card">
+          <span class="method-tag">3.3</span>
+          <h3>UEPS</h3>
+          <p><strong>Últimas entradas, primeras salidas.</strong> Las compras más recientes se consideran vendidas primero.</p>
+          <ul><li>El costo de ventas utiliza primero los costos recientes.</li><li>El inventario final conserva los costos antiguos.</li></ul>
+          <p class="note">Se estudia con fines comparativos; su aceptación depende de la normativa contable aplicable.</p>
+        </article>
+        <article class="method-card">
+          <span class="method-tag">3.4</span>
+          <h3>Promedio ponderado</h3>
+          <p>Reúne el costo de todas las unidades disponibles y calcula un costo promedio por unidad.</p>
+          <div class="formula">Costo promedio = Costo total disponible ÷ Unidades disponibles</div>
+          <p>Ese costo promedio se asigna tanto a las salidas como al inventario final.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="caso">
+      <div class="section-head">
+        <span class="kicker">Ejemplo empresarial</span>
+        <h2>Comercializadora TecnoStock</h2>
+        <p class="lead">La empresa vende sensores industriales. Durante el periodo dispone de dos lotes y vende 120 unidades.</p>
+      </div>
+      <div class="case-banner">
+        <div><h3>Datos del caso</h3><p>Antes de calcular, verifica que el costo total disponible sea igual al costo de ventas más el inventario final.</p></div>
+        <div class="data-chips"><span class="chip">100 u × $50</span><span class="chip">80 u × $55</span><span class="chip">Venta: 120 u</span></div>
+      </div>
+      <div class="comparison">
+        <article class="result-card">
+          <h3>PEPS <span class="method-icon">01</span></h3>
+          <div class="calc-line"><span>100 antiguas × $50</span><strong>$5,000</strong></div>
+          <div class="calc-line"><span>20 recientes × $55</span><strong>$1,100</strong></div>
+          <div class="result-highlight"><strong>Costo de ventas: $6,100</strong><br>Inventario final: 60 × $55 = <strong>$3,300</strong></div>
+        </article>
+        <article class="result-card">
+          <h3>UEPS <span class="method-icon">02</span></h3>
+          <div class="calc-line"><span>80 recientes × $55</span><strong>$4,400</strong></div>
+          <div class="calc-line"><span>40 antiguas × $50</span><strong>$2,000</strong></div>
+          <div class="result-highlight"><strong>Costo de ventas: $6,400</strong><br>Inventario final: 60 × $50 = <strong>$3,000</strong></div>
+        </article>
+        <article class="result-card">
+          <h3>Promedio <span class="method-icon">03</span></h3>
+          <div class="calc-line"><span>Costo disponible</span><strong>$9,400</strong></div>
+          <div class="calc-line"><span>Promedio: $9,400 ÷ 180</span><strong>$52.22</strong></div>
+          <div class="result-highlight"><strong>Costo de ventas: $6,266.67</strong><br>Inventario final: <strong>$3,133.33</strong></div>
+        </article>
+      </div>
+      <p class="note" style="margin-top:22px"><strong>Comprobación:</strong> en los tres métodos, costo de ventas + inventario final = $9,400. Lo que cambia es cómo se distribuye ese costo.</p>
+    </section>
+
+    <section id="laboratorio">
+      <div class="section-head">
+        <span class="kicker">Laboratorio</span>
+        <h2>Modifica los datos y compara</h2>
+        <p class="lead">Introduce dos lotes y una cantidad vendida. La calculadora aplicará los tres métodos y mostrará cómo cambia la distribución del costo.</p>
+      </div>
+      <div class="lab-grid">
+        <form class="panel" id="inventoryForm">
+          <h3>Datos de entrada</h3>
+          <div class="inputs">
+            <label>Unidades del lote inicial<input id="q1" type="number" min="0" step="1" value="100"></label>
+            <label>Costo unitario inicial ($)<input id="c1" type="number" min="0" step="0.01" value="50"></label>
+            <label>Unidades de la compra<input id="q2" type="number" min="0" step="1" value="80"></label>
+            <label>Costo unitario de compra ($)<input id="c2" type="number" min="0" step="0.01" value="55"></label>
+            <label class="full">Unidades vendidas<input id="sold" type="number" min="0" step="1" value="120"></label>
+          </div>
+          <div class="error" id="labError" role="alert"></div>
+          <button class="btn btn-blue" type="submit">Calcular métodos</button>
+          <button class="btn btn-ghost" type="button" id="resetLab">Restablecer</button>
+        </form>
+        <div class="panel" aria-live="polite">
+          <h3>Resultados</h3>
+          <div id="labOutput"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="especifica">
+      <div class="section-head">
+        <span class="kicker">Identificación específica</span>
+        <h2>Cada unidad conserva su propio costo</h2>
+      </div>
+      <div class="specific-grid">
+        <article class="panel">
+          <h3>Ejemplo: distribuidora de maquinaria</h3>
+          <p>La empresa tiene tres montacargas identificados por número de serie. Vende específicamente el equipo M-103.</p>
+          <table class="mini-table">
+            <thead><tr><th>Serie</th><th>Costo</th><th>Estado</th></tr></thead>
+            <tbody><tr><td>M-101</td><td>$410,000</td><td>Inventario</td></tr><tr><td>M-102</td><td>$435,000</td><td>Inventario</td></tr><tr><td>M-103</td><td>$428,000</td><td>Vendido</td></tr></tbody>
+          </table>
+        </article>
+        <article class="panel">
+          <h3>Resultado</h3>
+          <div class="formula">Costo de ventas = costo de M-103 = $428,000</div>
+          <div class="formula">Inventario final = $410,000 + $435,000 = $845,000</div>
+          <p>No se supone qué unidad salió: se conoce exactamente mediante su número de serie.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="perpetuo">
+      <div class="section-head">
+        <span class="kicker">3.5 Inventarios perpetuos</span>
+        <h2>El inventario se actualiza con cada movimiento</h2>
+        <p class="lead">El sistema perpetuo no es una forma adicional de asignar costos. Es un sistema de registro que mantiene actualizadas las entradas, salidas y existencias.</p>
+      </div>
+      <div class="perpetual-grid">
+        <article class="panel">
+          <h3>Secuencia operativa</h3>
+          <div class="flow">
+            <div class="flow-step"><span>1</span><div><strong>Compra</strong><br>Aumentan unidades y valor del inventario.</div></div>
+            <div class="flow-step"><span>2</span><div><strong>Venta</strong><br>Disminuyen unidades y se reconoce el costo de ventas.</div></div>
+            <div class="flow-step"><span>3</span><div><strong>Consulta</strong><br>El sistema muestra existencias y valor actualizados.</div></div>
+          </div>
+        </article>
+        <article class="panel">
+          <h3>Kárdex simplificado con PEPS</h3>
+          <table class="transaction-table">
+            <thead><tr><th>Movimiento</th><th>Entrada</th><th>Salida</th><th>Existencia</th></tr></thead>
+            <tbody>
+              <tr><td>Inventario inicial</td><td>100 u × $50</td><td>—</td><td>100 u</td></tr>
+              <tr><td>Compra</td><td>80 u × $55</td><td>—</td><td>180 u</td></tr>
+              <tr><td>Venta</td><td>—</td><td>120 u</td><td>60 u × $55</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Con PEPS, la existencia final corresponde al lote más reciente: 60 unidades a $55.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="practica">
+      <div class="quiz-wrap">
+        <div class="section-head">
+          <span class="kicker">Práctica</span>
+          <h2>Comprueba tu aprendizaje</h2>
+          <p class="lead">Responde las seis preguntas y presiona “Calificar”. La retroalimentación aparecerá al finalizar.</p>
+        </div>
+        <div class="progress" aria-label="Progreso de respuestas"><div id="quizProgress"></div></div>
+        <form id="quizForm">
+          <fieldset class="exercise-card" data-answer="b">
+            <legend>1. ¿Qué calcula un método de valuación?</legend>
+            <label class="option"><input type="radio" name="qz1" value="a"> La cantidad física total producida.</label>
+            <label class="option"><input type="radio" name="qz1" value="b"> El costo asignado a las salidas y al inventario final.</label>
+            <label class="option"><input type="radio" name="qz1" value="c"> El precio de venta al cliente.</label>
+            <div class="feedback">La valuación distribuye el costo disponible entre costo de ventas e inventario final.</div>
+          </fieldset>
+          <fieldset class="exercise-card" data-answer="a">
+            <legend>2. Una empresa vende primero mercancía cercana a caducar. ¿Qué supuesto representa?</legend>
+            <label class="option"><input type="radio" name="qz2" value="a"> PEPS.</label>
+            <label class="option"><input type="radio" name="qz2" value="b"> UEPS.</label>
+            <label class="option"><input type="radio" name="qz2" value="c"> Identificación específica.</label>
+            <div class="feedback">PEPS considera que las unidades más antiguas salen primero.</div>
+          </fieldset>
+          <fieldset class="exercise-card" data-answer="c">
+            <legend>3. Hay 20 unidades a $40 y 30 unidades a $50. ¿Cuál es el costo promedio ponderado?</legend>
+            <label class="option"><input type="radio" name="qz3" value="a"> $40.</label>
+            <label class="option"><input type="radio" name="qz3" value="b"> $45.</label>
+            <label class="option"><input type="radio" name="qz3" value="c"> $46.</label>
+            <div class="feedback">Costo total: $800 + $1,500 = $2,300. Unidades: 50. Promedio: $2,300 ÷ 50 = $46.</div>
+          </fieldset>
+          <fieldset class="exercise-card" data-answer="b">
+            <legend>4. Si los costos están aumentando, ¿qué método deja costos más recientes en el inventario final?</legend>
+            <label class="option"><input type="radio" name="qz4" value="a"> UEPS.</label>
+            <label class="option"><input type="radio" name="qz4" value="b"> PEPS.</label>
+            <label class="option"><input type="radio" name="qz4" value="c"> Ninguno.</label>
+            <div class="feedback">PEPS asigna los costos antiguos a las salidas y conserva los recientes en el inventario.</div>
+          </fieldset>
+          <fieldset class="exercise-card" data-answer="c">
+            <legend>5. ¿Qué método conviene para automóviles identificados por número de serie?</legend>
+            <label class="option"><input type="radio" name="qz5" value="a"> Promedio ponderado.</label>
+            <label class="option"><input type="radio" name="qz5" value="b"> PEPS.</label>
+            <label class="option"><input type="radio" name="qz5" value="c"> Identificación específica.</label>
+            <div class="feedback">Cada automóvil puede rastrearse y conservar su costo individual.</div>
+          </fieldset>
+          <fieldset class="exercise-card" data-answer="a">
+            <legend>6. ¿Qué caracteriza al sistema de inventario perpetuo?</legend>
+            <label class="option"><input type="radio" name="qz6" value="a"> Actualiza las existencias con cada entrada y salida.</label>
+            <label class="option"><input type="radio" name="qz6" value="b"> Solo determina el inventario al final del periodo.</label>
+            <label class="option"><input type="radio" name="qz6" value="c"> Asigna siempre el costo más reciente.</label>
+            <div class="feedback">El sistema perpetuo registra continuamente los movimientos y el saldo.</div>
+          </fieldset>
+          <button class="btn btn-primary" type="submit">Calificar</button>
+          <button class="btn btn-ghost" type="button" id="resetQuiz">Intentar nuevamente</button>
+        </form>
+        <div class="score-box" id="scoreBox" aria-live="polite"><strong id="scoreValue">0/6</strong><p id="scoreMessage"></p></div>
+      </div>
+    </section>
+
+    <section id="cierre">
+      <div class="section-head">
+        <span class="kicker">Síntesis</span>
+        <h2>Ideas que debes conservar</h2>
+      </div>
+      <div class="summary-grid">
+        <article class="summary-item"><h3>PEPS</h3><p>Salen primero los costos más antiguos.</p></article>
+        <article class="summary-item"><h3>UEPS</h3><p>Salen primero los costos más recientes.</p></article>
+        <article class="summary-item"><h3>Promedio</h3><p>Se asigna un costo unitario medio.</p></article>
+        <article class="summary-item"><h3>Perpetuo</h3><p>Registra cada movimiento y actualiza el saldo.</p></article>
+      </div>
+    </section>
+
+    <section id="fuentes">
+      <div class="section-head">
+        <span class="kicker">Fuentes consultadas</span>
+        <h2>Referencias en formato APA 7.ª edición</h2>
+        <p class="lead">Los casos y cantidades utilizados en los ejemplos son de elaboración didáctica propia.</p>
+      </div>
+      <div class="references">
+        <p>Datar, S. M., &amp; Rajan, M. V. (2021). <em>Horngren's cost accounting: A managerial emphasis</em> (17th ed.). Pearson.</p>
+        <p>Franklin, M., Graybeal, P., &amp; Cooper, D. (2019). <em>Principles of accounting, volume 1: Financial accounting</em>. OpenStax. <a href="https://openstax.org/details/books/principles-financial-accounting" target="_blank" rel="noopener noreferrer">https://openstax.org/details/books/principles-financial-accounting</a></p>
+        <p>IFRS Foundation. (s. f.). <em>IAS 2 Inventories</em>. Recuperado el 15 de octubre de 2026, de <a href="https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/" target="_blank" rel="noopener noreferrer">https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/</a></p>
+        <p>Kieso, D. E., Weygandt, J. J., &amp; Warfield, T. D. (2020). <em>Intermediate accounting</em> (17th ed.). Wiley.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>Costos y Presupuestos · Unidad 3 · Valuación de inventarios</footer>
+
+  <script>
+    const money = value => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2 }).format(value);
+
+    function fifo(q1, c1, q2, c2, sold) {
+      const from1 = Math.min(sold, q1);
+      const from2 = Math.max(0, sold - from1);
+      const cogs = from1 * c1 + from2 * c2;
+      return { cogs, ending: q1 * c1 + q2 * c2 - cogs, detail: `${from1} u × ${money(c1)} + ${from2} u × ${money(c2)}` };
+    }
+
+    function lifo(q1, c1, q2, c2, sold) {
+      const from2 = Math.min(sold, q2);
+      const from1 = Math.max(0, sold - from2);
+      const cogs = from2 * c2 + from1 * c1;
+      return { cogs, ending: q1 * c1 + q2 * c2 - cogs, detail: `${from2} u × ${money(c2)} + ${from1} u × ${money(c1)}` };
+    }
+
+    function average(q1, c1, q2, c2, sold) {
+      const totalUnits = q1 + q2;
+      const totalCost = q1 * c1 + q2 * c2;
+      const unit = totalCost / totalUnits;
+      const cogs = sold * unit;
+      return { cogs, ending: totalCost - cogs, detail: `${money(totalCost)} ÷ ${totalUnits} u = ${money(unit)}` };
+    }
+
+    function renderLab() {
+      const q1 = Number(document.getElementById('q1').value);
+      const c1 = Number(document.getElementById('c1').value);
+      const q2 = Number(document.getElementById('q2').value);
+      const c2 = Number(document.getElementById('c2').value);
+      const sold = Number(document.getElementById('sold').value);
+      const error = document.getElementById('labError');
+      const output = document.getElementById('labOutput');
+      const values = [q1, c1, q2, c2, sold];
+
+      if (values.some(v => !Number.isFinite(v) || v < 0) || q1 + q2 === 0) {
+        error.textContent = 'Ingresa valores numéricos no negativos y al menos una unidad disponible.';
+        output.innerHTML = '';
+        return;
+      }
+      if (!Number.isInteger(q1) || !Number.isInteger(q2) || !Number.isInteger(sold)) {
+        error.textContent = 'Las cantidades de unidades deben ser números enteros.';
+        output.innerHTML = '';
+        return;
+      }
+      if (sold > q1 + q2) {
+        error.textContent = `No es posible vender ${sold} unidades; solo hay ${q1 + q2} disponibles.`;
+        output.innerHTML = '';
+        return;
+      }
+
+      error.textContent = '';
+      const results = [
+        ['PEPS', fifo(q1, c1, q2, c2, sold)],
+        ['UEPS', lifo(q1, c1, q2, c2, sold)],
+        ['Promedio ponderado', average(q1, c1, q2, c2, sold)]
+      ];
+      output.innerHTML = results.map(([name, r]) => `
+        <div class="method-result">
+          <h3>${name}</h3>
+          <p><strong>Asignación:</strong> ${r.detail}</p>
+          <div class="lab-results">
+            <div class="metric"><small>Costo de ventas</small><strong>${money(r.cogs)}</strong></div>
+            <div class="metric"><small>Inventario final</small><strong>${money(r.ending)}</strong></div>
+            <div class="metric"><small>Comprobación</small><strong>${money(r.cogs + r.ending)}</strong></div>
+          </div>
+        </div>`).join('');
+    }
+
+    document.getElementById('inventoryForm').addEventListener('submit', event => {
+      event.preventDefault();
+      renderLab();
+    });
+    document.getElementById('resetLab').addEventListener('click', () => {
+      document.getElementById('q1').value = 100;
+      document.getElementById('c1').value = 50;
+      document.getElementById('q2').value = 80;
+      document.getElementById('c2').value = 55;
+      document.getElementById('sold').value = 120;
+      renderLab();
+    });
+
+    const quizForm = document.getElementById('quizForm');
+    const cards = [...document.querySelectorAll('.exercise-card')];
+    function updateProgress() {
+      const answered = cards.filter(card => card.querySelector('input:checked')).length;
+      document.getElementById('quizProgress').style.width = `${answered / cards.length * 100}%`;
+    }
+    quizForm.addEventListener('change', updateProgress);
+    quizForm.addEventListener('submit', event => {
+      event.preventDefault();
+      let score = 0;
+      cards.forEach(card => {
+        const selected = card.querySelector('input:checked');
+        const correct = selected && selected.value === card.dataset.answer;
+        card.classList.remove('correct', 'incorrect');
+        card.classList.add(correct ? 'correct' : 'incorrect');
+        if (correct) score++;
+      });
+      const box = document.getElementById('scoreBox');
+      document.getElementById('scoreValue').textContent = `${score}/${cards.length}`;
+      const messages = score === 6 ? 'Dominio excelente de la unidad.' : score >= 4 ? 'Buen resultado. Revisa la retroalimentación de los reactivos incorrectos.' : 'Conviene repasar los métodos y volver a intentarlo.';
+      document.getElementById('scoreMessage').textContent = messages;
+      box.style.display = 'block';
+      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    document.getElementById('resetQuiz').addEventListener('click', () => {
+      quizForm.reset();
+      cards.forEach(card => card.classList.remove('correct', 'incorrect'));
+      document.getElementById('scoreBox').style.display = 'none';
+      updateProgress();
+    });
+
+    renderLab();
+  </script>
+</body>
+</html>
