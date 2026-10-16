@@ -277,7 +277,6 @@
     .study-table th, .study-table td { padding: 10px; border: 1px solid var(--line); text-align: right; white-space: normal; }
     .study-table th:first-child, .study-table td:first-child { text-align: left; }
     .study-table tfoot td { color: var(--navy); background: #edf5ff; font-weight: 900; }
-    .zero-note { margin: 10px 0; padding: 10px 12px; border-radius: 10px; color: #604511; background: var(--amber-soft); font-size: .9rem; }
     .steps { counter-reset: calcstep; display: grid; gap: 8px; margin: 14px 0; }
     .step {
       position: relative;
@@ -743,9 +742,8 @@
         ending: totalCost - cogs,
         combined: true,
         averageUnitCost: unit,
-        detail: `${sold} u × (${money(totalCost)} ÷ ${totalUnits} u) = ${sold} u × ${money(unit)}`,
-        endingDetail: `${totalUnits - sold} u × ${money(unit)}`,
-        averageDetail: `${money(totalCost)} ÷ ${totalUnits} u = ${money(unit)}`
+        detail: `${sold} u × ${money(unit)}`,
+        endingDetail: `${totalUnits - sold} u × ${money(unit)}`
       };
     }
 
@@ -830,10 +828,6 @@
               <div class="step"><strong>Calcula el costo promedio:</strong> ${money(totalCost)} ÷ ${totalUnits} u = ${money(r.averageUnitCost)} por unidad.</div>
               <div class="step"><strong>Asigna el promedio:</strong> ${sold} u vendidas y ${endingUnits} u finales se valúan a ${money(r.averageUnitCost)} cada una.</div>
             </div>` : `
-            <div class="steps">
-              <div class="step"><strong>Selecciona las unidades que salen:</strong> ${r.soldOld} antiguas + ${r.soldRecent} recientes = ${sold} u vendidas.</div>
-              <div class="step"><strong>Obtén las unidades que quedan:</strong> ${r.remainingOld} antiguas + ${r.remainingRecent} recientes = ${endingUnits} u finales.</div>
-            </div>
             <div class="study-table-wrap">
               <table class="study-table">
                 <thead><tr><th>Lote</th><th>Disponibles</th><th>Vendidas</th><th>Finales</th><th>Costo/u</th><th>Costo asignado a ventas</th><th>Valor en inventario final</th></tr></thead>
@@ -843,9 +837,7 @@
                 </tbody>
                 <tfoot><tr><td>Total</td><td>${totalUnits} u</td><td>${sold} u</td><td>${endingUnits} u</td><td>—</td><td>${money(r.cogs)}</td><td>${money(r.ending)}</td></tr></tfoot>
               </table>
-            </div>
-            ${(r.soldOld === 0 || r.soldRecent === 0) ? `<p class="zero-note"><strong>¿Por qué aparece 0 u?</strong> Porque con ${name} no se vendió ninguna unidad de ${r.soldOld === 0 ? 'la existencia antigua' : 'la compra reciente'}. Esas unidades permanecen en el inventario final; no es un dato faltante.</p>` : ''}`}
-          ${r.averageDetail ? `<p><strong>Costo promedio:</strong> ${r.averageDetail}</p>` : ''}
+            </div>`}
           <p><strong>Costo de ventas (${sold} u):</strong> ${r.detail} = <strong>${money(r.cogs)}</strong></p>
           <p><strong>Inventario final (${endingUnits} u):</strong> ${r.endingDetail} = <strong>${money(r.ending)}</strong></p>
           <p><strong>Comprobación del inventario final por diferencia:</strong> costo disponible ${money(totalCost)} − costo de ventas ${money(r.cogs)} = <strong>${money(r.ending)}</strong></p>
